@@ -4,20 +4,20 @@ This repository contains the supplementary code for the paper titled “Optimal 
 
 Here you will find the code to perform the following:
 *	Implement and solve the MDP using parallelized value iteration
-o	runMDP.ipynb
-o	MDPSolver_.jl
-o	ParallelV_.jl
-o	lvtest.jl
-o	CSLV_.jl
-o	CSLVProblem_.jl
+  *	runMDP.ipynb
+  * MDPSolver_.jl
+  * ParallelV_.jl
+  * lvtest.jl
+  * CSLV_.jl
+  * CSLVProblem_.jl
 *	Data Files
-o	debrisData.txt
-o	flightPaths.jl
+  * debrisData.txt
+  * flightPaths.jl
 *	Visualize the MDP solution
-o	visualizeUtilityAndPolicy.ipynb
+  * visualizeUtilityAndPolicy.ipynb
 *	Run simulations of the airspace to analyze historic, nominal, and proposed aircraft flights
-o	proposedSimulation.ipynb
-o	nominalAndHistoricSimulation.ipynb
+  * proposedSimulation.ipynb
+  * nominalAndHistoricSimulation.ipynb
 
 ## Dependencies
 
