@@ -147,7 +147,7 @@ function debrisLocations(problem::CSLVProblem, state::State)
 end
 
 ## set the distance reward value
-function distanceReward(problem::CSLVProblem, state::State, action::Action)
+function distanceReward(problem::CSLVProblem, state::State)
   ## not within safety threshold of debris
   reward = 0.
   ## check if when launch vehicle passes through altitude
@@ -173,7 +173,7 @@ function reward(problem::CSLVProblem, state::State, action::Action)
   if velocityReward(problem, state, action) == -Inf
     return -Inf
   else
-    return problem.lambda * velocityReward(problem, state, action) + distanceReward(problem, state, action)
+    return problem.lambda * velocityReward(problem, state, action) + distanceReward(problem, state)
   end
 end
 
