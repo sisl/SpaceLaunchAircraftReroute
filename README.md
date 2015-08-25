@@ -24,5 +24,6 @@ Here you will find the code to perform the following:
 The software is implemented entirely in Julia. For the best results, the user should use a notebook. An example notebook is provided for the reader's convenience in the example subdirectory. The following Julia packages are required for running all code and notebooks:
 *	[GridInterpolations.jl](https://github.com/sisl/GridInterpolations.jl)
 *	[PGFPlots.jl](https://github.com/sisl/PGFPlots.jl) (Note: additional dependencies)
-*	[Interact.jl](https://github.com/JuliaLang/Interact.jl) 
+*	[Interact.jl](https://github.com/JuliaLang/Interact.jl)
+*	[ProgressMeter.jl](https://github.com/timholy/ProgressMeter.jl)
 
