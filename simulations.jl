@@ -510,7 +510,7 @@ function proposed(xArray, yArray, nameArray, xEllipse, yEllipse, weight, distNom
 	println(round(FINALAvgNewDist,2))
 	println("average added proposed distance")
 	println(round(FINALAvgNewDist-distNom,2))
-	println("weighted number proposed unsafe")
+	println("weighted number proposed traverse 10x safety region")
 	println(round(FINALNewThru,2))
 	println("percent propsed traverse 10x safety  region")
 	println(round(FINALNewThru/flightUni,2))
