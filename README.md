@@ -1,6 +1,6 @@
 # Optimal Aircraft Rerouting During Commercial Space Launches
 
-This repository contains the supplementary code for the paper titled “Optimal Aircraft Rerouting During Commercial Space Launches” by Rachael E. Tompa, Mykel J. Kochenderfer, Rodney Cole, and James K. Kuchar, in the 2015 Digital Avionics Systems Conference. 
+This repository contains supplementary code written at Stanford and discussed in the paper titled “Optimal Aircraft Rerouting During Commercial Space Launches” by Rachael E. Tompa, Mykel J. Kochenderfer, Rodney Cole, and James K. Kuchar, in the 2015 Digital Avionics Systems Conference. 
 
 Here you will find the code to perform the following:
 *	Implement and solve the MDP using parallelized value iteration
