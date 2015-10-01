@@ -39,7 +39,7 @@ end
 
 ##          nominal simulation           ##
 ###########################################
-function nominal(xArray, yArray, nameArray, xEllipse, yEllipse, weight)
+function nominal(problem, xArray, yArray, nameArray, xEllipse, yEllipse, weight)
 	##       setup final result vectors      ##
 	###########################################
 	## list of average distance traveled
@@ -149,7 +149,7 @@ end
 
 ##          historic simulation          ##
 ###########################################
-function historic(xArray, yArray, nameArray, xEllipse, yEllipse, xFoci, yFoci, threshold, weight, distNom)
+function historic(problem, xArray, yArray, nameArray, xEllipse, yEllipse, xFoci, yFoci, threshold, weight, distNom)
 	##       setup final result vectors      ##
 	###########################################
 	## list of average distance traveled
@@ -357,7 +357,7 @@ end
 
 ##          proposed simulation          ##
 ###########################################
-function proposed(xArray, yArray, nameArray, xEllipse, yEllipse, weight, distNom)
+function proposed(problem, h, xArray, yArray, nameArray, xEllipse, yEllipse, weight, distNom)
 	##      Setup final result vectors       ##
 	###########################################
 	## list of average distance traveled
