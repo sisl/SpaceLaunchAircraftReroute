@@ -70,11 +70,11 @@ function CSLVProblem()
 
   minE = -2.5e4
   maxE = 5.1e4
-  stepE = 2000.
+  stepE = 4000. # 2000.
 
   minN = -4.5e4
   maxN = 6.5e4
-  stepN = 2000.
+  stepN = 4000. # 2000.
 
   stepHeadingState = 15. # degrees
 
@@ -85,8 +85,8 @@ function CSLVProblem()
   lvTime = 11. # * 10 seconds (total launch vehicle simulation time)
 
   ## make acGrid
-  acGrid = RectangleGrid([minE:stepE:maxE], [minN:stepN:maxN], [-180.:stepHeadingState:180.], 
-                         [-1.:timeStep:lvTime], [0.:timeStep:timeThres])
+  acGrid = RectangleGrid(collect(minE:stepE:maxE), collect(minN:stepN:maxN), collect(-180.:stepHeadingState:180.), 
+                         collect(-1.:timeStep:lvTime), collect(0.:timeStep:timeThres))
   
   #############################################################
   ##        Parameters needed for immutable LVState          ##
@@ -102,11 +102,11 @@ function CSLVProblem()
   safeThres = 1520.4 # in meters
 
   ## MAKE lvStates
-  prob = [fill(0.052,length(eUse))]
-  safe = [fill(safeThres,length(eUse))]
-  timeLV = [0.:timeStep:lvTime]
+  prob = fill(0.052,length(eUse))
+  safe = fill(safeThres,length(eUse))
+  timeLV = collect(0.:timeStep:lvTime)
   # setup LV states with timeRem
-  lvStates = [LVState(eUse[i], nUse[i], prob[i], safe[i], timeLV[i]) for i = 1:length(eUse)]
+  lvStates = [LVState(eUse[i], nUse[i], prob[i], safe[i], timeLV[i]) for i in 1:length(eUse)]
 
   #############################################################
   ##         Parameters needed for immutable Action          ##
@@ -117,7 +117,7 @@ function CSLVProblem()
   stepHeadingAction = 15. # degrees
 
   ## MAKE actionArray
-  heading = [noAlert,-180.:stepHeadingAction:180.]
+  heading = cat(1,[noAlert],collect(-180.:stepHeadingAction:180.))
   actionArray = [Action(heading[i]) for i = 1:length(heading)]
 
   #############################################################

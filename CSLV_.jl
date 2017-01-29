@@ -64,12 +64,12 @@ end
 
 ## find the launch vehicle state when anomaly occurs
 function stateAtAnomaly(problem::CSLVProblem, state::State)
-  problem.lvStates[int(state.anomaly)]
+  problem.lvStates[convert(Int,floor(state.anomaly))]
 end
 
 ## find the launch vehicle state at the time step after anomaly if no anomaly had occurred
 function statePostAnomaly(problem::CSLVProblem, state::State)
-  problem.lvStates[int(state.anomaly + 1)]
+  problem.lvStates[convert(Int,floor(state.anomaly + 1))]
 end
 
 ## find debris ellipse and determine if aircraft within debris ellipse
@@ -110,11 +110,11 @@ function debrisLocations(problem::CSLVProblem, state::State)
   ## only look if within the time debris hits altitude
   if state.anomaly >= problem.startDebris && state.anomaly <= problem.endDebris 
     ## cycle over every possible piece of debris
-    for i = 1:length(problem.debris)/5
+    for i = 1:div(length(problem.debris),5)
       ## reset trigger
       atTime = false
       ## if anomaly is this time step or previous time step or the next time step
-      if i > 1 && i < length(problem.debris)/5
+      if i > 1 && i < div(length(problem.debris),5)
         if approxEq(state.anomaly, problem.debris[5*(i-1)+1]) || approxEq(state.anomaly, problem.debris[5*(i-1)+1-5]) || 
            approxEq(state.anomaly, problem.debris[5*(i-1)+1+5])
           atTime = true
@@ -261,7 +261,7 @@ end
 
 ## perform value iteration
 function valueIteration(problem::CSLVProblem)
-  actionIndex = [problem.actionArray[i] => i for i = 1:problem.nActions]
+  actionIndex = Dict(problem.actionArray[i] => i for i in 1:problem.nActions)
   ## setup policy and utility
   util = zeros(problem.nStates)
   for i = 1:problem.nStates
@@ -302,13 +302,13 @@ function action(problem::CSLVProblem, util, x)
   QHi = 0.
   ind = 1 
   ## cycle through actions
-  for i = 1:problem.nActions
+  for i in 1:problem.nActions
     ## find current utility value
     QNow = reward(problem, State(x), problem.actionArray[i])
     ## find the next states and their probabilities of occurring
     (probabilities, nextStates) = nextState(problem, State(x), problem.actionArray[i])
     ## cycle over all potential next states
-    for nextStateIndex = 1:length(nextStates)
+    for nextStateIndex in 1:length(nextStates)
       xStar = nextStates[nextStateIndex] 
       QNow = QNow + probabilities[nextStateIndex] * interpolate(problem.acGrid, util, xStar)
     end

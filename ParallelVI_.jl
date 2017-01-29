@@ -14,7 +14,7 @@ import Base.pmap # for parallel work
 
 type ParallelVI
 
-    policyFile::ASCIIString
+    policyFile::String
 
     maxIterations::Int
 
@@ -45,20 +45,20 @@ function solve(mdp::CSLVProblem, alg::ParallelVI)
     nChunks = length(alg.stateOrder)
     order = alg.stateOrder
 
-    if nProcs > CPU_CORES
+    if nProcs > Sys.CPU_CORES
         error("Requested too many processors")
     end
 
     # start and end indeces
-    chunks = Array(Vector{(Int64, Int64)}, nChunks) 
+    chunks = Array(Vector{Tuple{Int64, Int64}}, nChunks) 
     for i = 1:nChunks
         co = order[i]
         sIdx = co[1]
         eIdx = co[2]
         ns = eIdx - sIdx
         # divide the work among the processors
-        stride = int(ns / (nProcs-1))
-        temp = (Int64, Int64)[]
+        stride = div(ns, (nProcs-1))
+        temp = Tuple{Int64, Int64}[]
         for j = 0:(nProcs-2)
             si = j * stride + sIdx
             ei = si + stride - 1
@@ -72,7 +72,7 @@ function solve(mdp::CSLVProblem, alg::ParallelVI)
 
 
     # shared array for utility
-    util = SharedArray(Float64, (nStates), init = S -> S[localindexes(S)] = 0.0, pids = [1:nProcs])
+    util = SharedArray(Float64, (nStates), init = S -> S[localindexes(S)] = 0.0, pids = 1:nProcs)
 
     # loop over chunks 
     results = 1
@@ -98,7 +98,7 @@ function solve(mdp::CSLVProblem, alg::ParallelVI)
     return util
 end
 
-function solveChunk(mdp::CSLVProblem, valOld::SharedArray, valNew::SharedArray, valQ::SharedArray, stateIndices::(Int64, Int64))
+function solveChunk(mdp::CSLVProblem, valOld::SharedArray, valNew::SharedArray, valQ::SharedArray, stateIndices::Tuple{Int64, Int64})
 
     sStart = stateIndices[1]
     sEnd   = stateIndices[2]
@@ -130,7 +130,7 @@ function solveChunk(mdp::CSLVProblem, valOld::SharedArray, valNew::SharedArray, 
     return stateIndices 
 end
 
-function solveChunk(mdp::CSLVProblem, util::SharedArray, valQ::SharedArray, stateIndices::(Int64, Int64))
+function solveChunk(mdp::CSLVProblem, util::SharedArray, valQ::SharedArray, stateIndices::Tuple{Int64, Int64})
 
     sStart = stateIndices[1]
     sEnd   = stateIndices[2]
@@ -162,7 +162,7 @@ function solveChunk(mdp::CSLVProblem, util::SharedArray, valQ::SharedArray, stat
     return stateIndices 
 end
 
-function solveChunk(mdp::CSLVProblem, util::SharedArray, stateIndices::(Int64, Int64))
+function solveChunk(mdp::CSLVProblem, util::SharedArray, stateIndices::Tuple{Int64, Int64})
 
     sStart = stateIndices[1]
     sEnd   = stateIndices[2]

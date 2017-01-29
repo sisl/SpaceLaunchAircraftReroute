@@ -197,8 +197,8 @@ function historic(problem, xArray, yArray, nameArray, xEllipse, yEllipse, xFoci,
 	            yListOldA = Float64[]
 	            xListOldB = Float64[]
 	            yListOldB = Float64[]
-	            extXell = [xEllipse,xEllipse]
-	            extYell = [yEllipse,yEllipse]
+	            extXell = cat(1,xEllipse,xEllipse)
+	            extYell = cat(1,yEllipse,yEllipse)
 	            distListOld = Float64[]
 	            unsafeZoneOld = 0.
 	            for t = 1:1000
