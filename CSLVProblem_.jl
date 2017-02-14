@@ -1,5 +1,6 @@
 module CSLVProblem_
 
+using POMDPs
 using GridInterpolations
 
 import Base.convert
@@ -32,7 +33,7 @@ immutable Action
 end
 
 ## to fully define problem and all fields
-type CSLVProblem
+type CSLVProblem <: MDP{State,Action}
   minE::Float64
   maxE::Float64
   minN::Float64
@@ -70,11 +71,11 @@ function CSLVProblem()
 
   minE = -2.5e4
   maxE = 5.1e4
-  stepE = 4000. # 2000.
+  stepE = 2000.
 
   minN = -4.5e4
   maxN = 6.5e4
-  stepN = 4000. # 2000.
+  stepN = 2000.
 
   stepHeadingState = 15. # degrees
 

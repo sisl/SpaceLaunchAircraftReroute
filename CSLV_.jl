@@ -181,7 +181,7 @@ end
 function nextState(problem::CSLVProblem, state::State, action::Action)
   ## if first time step empty
   if state.timeRem == 0.
-    return ((0.,0.),(zeros(5),zeros(5)))
+    return ((0.5,0.5),(zeros(5),zeros(5)))
   end
   ## setup arrays for valid speeds and positions
   xSpeeds = Float64[]
