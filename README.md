@@ -16,8 +16,7 @@ Here you will find the code to perform the following:
 *	Visualize the MDP solution
   * visualizeUtilityAndPolicy.ipynb
 *	Run simulations of the airspace to analyze historic, nominal, and proposed aircraft flights
-  * proposedSimulation.ipynb
-  * nominalAndHistoricSimulation.ipynb
+  * runSimulations.ipynb
 
 ## Dependencies
 
