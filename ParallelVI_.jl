@@ -41,7 +41,6 @@ function solve(mdp::CSLVProblem, alg::ParallelVI)
     valQ = alg.valQ
 
     nProcs = alg.nProcs
-
     nChunks = length(alg.stateOrder)
     order = alg.stateOrder
 

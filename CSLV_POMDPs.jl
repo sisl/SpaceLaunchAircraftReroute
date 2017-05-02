@@ -4,6 +4,7 @@ using CSLV_
 using Distributions
 using GridInterpolations
 using DiscreteValueIteration
+using GenerativeModels
 
 import GridInterpolations.interpolate
 
@@ -30,6 +31,11 @@ function POMDPs.actions(mdp::CSLVProblem)
     mdp.actionArray
 end
 
+function POMDPs.actions(mdp::CSLVProblem, s::State)
+    valid(a) = CSLV_.reward(mdp, s, a) != -Inf
+    filter(valid, mdp.actionArray)
+end
+
 type CSLV_Distribution
     states::Array{State}
     d::DiscreteUnivariateDistribution
@@ -51,7 +57,7 @@ end
 
 POMDPs.iterator(d::CSLV_Distribution) = d.states
 
-function rand(rng::AbstractRNG, d::CSLV_Distribution)
+function Base.rand(rng::AbstractRNG, d::CSLV_Distribution)
     d.states[rand(rng, d.d)]
 end
 
@@ -62,14 +68,18 @@ function POMDPs.transition(mdp::CSLVProblem, state::State, action::Action)
 end
 
 function POMDPs.reward(mdp::CSLVProblem, state::State, action::Action, statep::State)
-    CSLV_.reward(mdp, state, action)
+    r = CSLV_.reward(mdp, state, action)
+    if r == -Inf
+        r = -1e3*1.0
+    end
+    r
 end
 
 POMDPs.isterminal(mdp::CSLVProblem, s::State) = (s.timeRem == 0)
 POMDPs.n_states(mdp::CSLVProblem) = mdp.nStates;
 POMDPs.n_actions(mdp::CSLVProblem) = mdp.nActions;
 
-POMDPs.discount(mdp::CSLVProblem) = 1;
+POMDPs.discount(mdp::CSLVProblem) = 0.99;
 
 function POMDPs.state_index(mdp::CSLVProblem, state::State)
     inds, weights = interpolants(mdp.acGrid,convert(state))
@@ -86,12 +96,52 @@ function POMDPs.action_index(mdp::CSLVProblem, action::Action)
     ind
 end
 
+function GenerativeModels.initial_state(mdp::CSLVProblem, rng::AbstractRNG)
+    t = 81
+    lvt = -1
+    x = Base.rand(rng, mdp.acGrid.cutPoints[1])
+    y = Base.rand(rng, mdp.acGrid.cutPoints[2])
+    h = Base.rand(rng, mdp.acGrid.cutPoints[3])
+    s = State(x,y,h,lvt,t)
+    s
+end
+
 function GridInterpolations.interpolate(ss::RectangleGrid, v::Vector{Float64}, s::State)
     interpolate(ss,v,convert(s))
 end
 
+function POMDPs.vec(mdp::CSLVProblem, state::State)
+    convert(state)./[10000,10000,100,1,100]
+end
 
+function unvec(mdp::CSLVProblem, s_vec::Vector)
+    State(s_vec.*[10000,10000,100,1,100])
+end
 
+# define initial_state sampling with a distribution
+function GenerativeModels.initial_state(mdp::CSLVProblem, s0_dist::Sampleable, rng::AbstractRNG)
+    t = 81
+    lvt = -1
 
+    s_vec = rand(s0_dist)
 
+    # go through and enforce ranges
+    if  s_vec[1] <= mdp.minE || s_vec[1] >= mdp.maxE
+        s_vec[1] = Base.rand(rng, mdp.acGrid.cutPoints[1])
+    end
+
+    if s_vec[2] <= mdp.minN || s_vec[2] >= mdp.maxN
+        s_vec[2] = Base.rand(rng, mdp.acGrid.cutPoints[2])
+    end
+
+    if abs(s_vec[3]) > 180.0
+        s_vec[3] = Base.rand(rng, mdp.acGrid.cutPoints[3])
+    end
+
+    s = unvec(mdp, s_vec)
+
+    # discretize
+    s_ind = state_index(mdp, s)
+    State(ind2x(mdp.acGrid, s_ind))
+end
 

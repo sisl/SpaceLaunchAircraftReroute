@@ -1,4 +1,4 @@
-N_PROCS = 2
+N_PROCS = 4
 
 addprocs(N_PROCS-1)                  
 @everywhere __PARALLEL__ = true   

@@ -71,11 +71,11 @@ function CSLVProblem()
 
   minE = -2.5e4
   maxE = 5.1e4
-  stepE = 2000.
+  stepE = 4000. #2000.
 
   minN = -4.5e4
   maxN = 6.5e4
-  stepN = 2000.
+  stepN = 4000. #2000.
 
   stepHeadingState = 15. # degrees
 
