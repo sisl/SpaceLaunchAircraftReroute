@@ -126,17 +126,19 @@ function GenerativeModels.initial_state(mdp::CSLVProblem, s0_dist::Sampleable, r
     s_vec = rand(s0_dist)
 
     # go through and enforce ranges
-    if  s_vec[1] <= mdp.minE || s_vec[1] >= mdp.maxE
-        s_vec[1] = Base.rand(rng, mdp.acGrid.cutPoints[1])
+    if  s_vec[1] <= mdp.minE/10000 || s_vec[1] >= mdp.maxE/10000
+        s_vec[1] = Base.rand(rng, mdp.acGrid.cutPoints[1])/10000
     end
 
-    if s_vec[2] <= mdp.minN || s_vec[2] >= mdp.maxN
-        s_vec[2] = Base.rand(rng, mdp.acGrid.cutPoints[2])
+    if s_vec[2] <= mdp.minN/10000 || s_vec[2] >= mdp.maxN/10000
+        s_vec[2] = Base.rand(rng, mdp.acGrid.cutPoints[2])/10000
     end
 
-    if abs(s_vec[3]) > 180.0
-        s_vec[3] = Base.rand(rng, mdp.acGrid.cutPoints[3])
+    if abs(s_vec[3]) > 1.80
+        s_vec[3] = Base.rand(rng, mdp.acGrid.cutPoints[3])/100
     end
+
+    s_vec[5] = t/100
 
     s = unvec(mdp, s_vec)
 

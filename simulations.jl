@@ -437,7 +437,7 @@ function proposed(problem, h, xArray, yArray, nameArray, xEllipse, yEllipse, wei
 	                    end
 	                    speeds = directionSpeedsRad(problem.acSpeed, phi)
 	                else 
-	                    speeds = directionSpeedsDeg(problem.acSpeed, problem.actionArray[act].head)
+	                    speeds = directionSpeedsDeg(problem.acSpeed, phiDeg+problem.actionArray[act].head)
 	                end
 	                ## update list of rerouted
 	                if act != 1

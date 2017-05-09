@@ -118,7 +118,9 @@ function CSLVProblem()
   stepHeadingAction = 15. # degrees
 
   ## MAKE actionArray
-  heading = cat(1,[noAlert],collect(-180.:stepHeadingAction:180.))
+  # heading = cat(1,[noAlert],collect(-180.:stepHeadingAction:180.))
+  heading = [noAlert, -2*stepHeadingAction, -stepHeadingAction, 
+                    0, stepHeadingAction, 2*stepHeadingAction]
   actionArray = [Action(heading[i]) for i = 1:length(heading)]
 
   #############################################################

@@ -51,13 +51,16 @@ function velocityReward(problem::CSLVProblem, state::State, action::Action)
   if action.head == problem.noAlert
     reward = 0.
   ## alert with heading change
-  elseif state.head != action.head
-    ## check if heading change is possible
-    if abs(unwrap_deg(state.head-action.head)) > problem.headingLimit
-      reward = -Inf
-    else
-      reward = -1.
-    end
+  # elseif state.head != action.head
+  #   ## check if heading change is possible
+  #   if abs(unwrap_deg(state.head-action.head)) > problem.headingLimit
+  #     reward = -Inf
+  #   else
+  #     reward = -1.
+  #   end
+  # end
+  elseif action.head != 0
+    reward = -1.
   end
   reward
 end
@@ -192,7 +195,7 @@ function nextState(problem::CSLVProblem, state::State, action::Action)
   if action.head != problem.noAlert
     ## does not respond, does respond
     response = [1-problem.response,problem.response]
-    headings = [state.head, action.head]
+    headings = [state.head, unwrap_deg(state.head + action.head)]
   else
     ## turning probability distribution
     response = problem.turnDist
