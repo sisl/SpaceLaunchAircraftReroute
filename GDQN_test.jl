@@ -11,7 +11,7 @@ s0_dist = rl.GMM(3,5,
 			       PDMat(full(Diagonal([0.4, 0.4, 0.4, 0.01, 0.01]))),
 			       PDMat(full(Diagonal([0.4, 0.4, 0.4, 0.01, 0.01])))]
 			    );
-dqn = rl.GDQN(max_steps=100, checkpoint_interval=25, num_epochs=10000, target_refresh_interval=250)
+dqn = rl.GDQN(max_steps=100, checkpoint_interval=25, num_epochs=15000, target_refresh_interval=250)
 pol = rl.solve(dqn, mdp, s0_dist=Nullable{rl.GMM}(s0_dist))
 
 util = zeros(Float32, n_states(mdp))
