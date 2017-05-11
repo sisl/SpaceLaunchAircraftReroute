@@ -20,7 +20,7 @@ for (i,s) in enumerate(iterator(states(mdp)))
 end
 
 df = DataFrame(dqn.stats)
-writetable("cslv_dqn.csv", df)
+writetable("cslv_gdqn.csv", df)
 
 f = open("lambda0.05_gdqn", "w")
 writedlm(f, util)
