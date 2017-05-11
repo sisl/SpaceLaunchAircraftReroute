@@ -19,6 +19,9 @@ for (i,s) in enumerate(iterator(states(mdp)))
     util[i] = rl.util(pol, s)
 end
 
+df = DataFrame(dqn.stats)
+writetable("cslv_dqn.csv", df)
+
 f = open("lambda0.05_gdqn", "w")
 writedlm(f, util)
 close(f)
