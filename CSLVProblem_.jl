@@ -66,7 +66,7 @@ function CSLVProblem()
   ##          Parameters needed for immutable State          ##
   #############################################################
 
-  ## For Grid: East Position, North Position, Heading, 
+  ## For Grid: East Position, North Position, Heading,
   ## Anomaly Time, Launch Vehicle Time ##
 
   minE = -2.5e4
@@ -86,9 +86,9 @@ function CSLVProblem()
   lvTime = 11. # * 10 seconds (total launch vehicle simulation time)
 
   ## make acGrid
-  acGrid = RectangleGrid(collect(minE:stepE:maxE), collect(minN:stepN:maxN), collect(-180.:stepHeadingState:180.), 
+  acGrid = RectangleGrid(collect(minE:stepE:maxE), collect(minN:stepN:maxN), collect(-180.:stepHeadingState:180.),
                          collect(-1.:timeStep:lvTime), collect(0.:timeStep:timeThres))
-  
+
   #############################################################
   ##        Parameters needed for immutable LVState          ##
   #############################################################
@@ -100,7 +100,7 @@ function CSLVProblem()
 
   probAnom = 0.052 # probability of anomaly for each time step
 
-  safeThres = 1520.4 # in meters
+  safeThres = 5*1520.4 # in meters (NOTE: added 5x multiplier for testing)
 
   ## MAKE lvStates
   prob = fill(0.052,length(eUse))
@@ -119,14 +119,14 @@ function CSLVProblem()
 
   ## MAKE actionArray
   # heading = cat(1,[noAlert],collect(-180.:stepHeadingAction:180.))
-  heading = [noAlert, -2*stepHeadingAction, -stepHeadingAction, 
+  heading = [noAlert, -2*stepHeadingAction, -stepHeadingAction,
                     0, stepHeadingAction, 2*stepHeadingAction]
   actionArray = [Action(heading[i]) for i = 1:length(heading)]
 
   #############################################################
   ##              Parameters needed for debris               ##
   #############################################################
-  
+
   debrisFileName = "debrisData.txt"
 
   ## GET debris data
@@ -140,7 +140,7 @@ function CSLVProblem()
   nStates = prod(acGrid.cut_counts)
   nActions = length(actionArray)
 
-  ## function: velocityReward 
+  ## function: velocityReward
   maintainCost = -0.01
   headingLimit = 30.1 # degrees
 
@@ -165,8 +165,8 @@ function CSLVProblem()
   turnDist = [0.05, 0.25, 0.4, 0.25, 0.05]
 
   ## return
-  CSLVProblem(minE, maxE, minN, maxN, stepHeadingState,timeThres, acGrid, lvStates, noAlert, 
-              actionArray, debris, nStates, nActions, maintainCost, headingLimit, startDebris, 
+  CSLVProblem(minE, maxE, minN, maxN, stepHeadingState,timeThres, acGrid, lvStates, noAlert,
+              actionArray, debris, nStates, nActions, maintainCost, headingLimit, startDebris,
               endDebris, timeStepSeconds, intersectTime, lambda, acSpeed, response, turnDist)
 end
 

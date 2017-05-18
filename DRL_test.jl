@@ -1,10 +1,11 @@
+push!(LOAD_PATH, ".")
 include("CSLV_POMDPs.jl");
 include(joinpath("..","DRL.jl","src","DRL.jl"))
 using DRL
 using DataFrames
 
 mdp = CSLVProblem()
-dqn = rl.DQN(max_steps=100, checkpoint_interval=25, num_epochs=7500, target_refresh_interval=250)
+dqn = rl.DQN(max_steps=100, checkpoint_interval=25, num_epochs=5000, target_refresh_interval=250)
 pol = rl.solve(dqn, mdp)
 
 util = zeros(Float32, n_states(mdp))

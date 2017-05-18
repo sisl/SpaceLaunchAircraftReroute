@@ -13,7 +13,7 @@ export CSLVProblem, State, Action
 ## export helping functions
 export approxEq, unwrap_rad, unwrap_deg
 ## export reward functions
-export velocityReward, stateAtAnomaly, statePostAnomaly, inEllipse, debrisLocations, 
+export velocityReward, stateAtAnomaly, statePostAnomaly, inEllipse, debrisLocations,
        distanceReward, reward
 ## export next state function
 export nextState
@@ -106,23 +106,23 @@ function inEllipse(problem::CSLVProblem, state::State, cX::Float64, cY::Float64)
   end
 end
 
-## find the locations of the debris 
+## find the locations of the debris
 function debrisLocations(problem::CSLVProblem, state::State)
   ## no active debris
   returnValue = 0
   ## only look if within the time debris hits altitude
-  if state.anomaly >= problem.startDebris && state.anomaly <= problem.endDebris 
+  if state.anomaly >= problem.startDebris && state.anomaly <= problem.endDebris
     ## cycle over every possible piece of debris
     for i = 1:div(length(problem.debris),5)
       ## reset trigger
       atTime = false
       ## if anomaly is this time step or previous time step or the next time step
       if i > 1 && i < div(length(problem.debris),5)
-        if approxEq(state.anomaly, problem.debris[5*(i-1)+1]) || approxEq(state.anomaly, problem.debris[5*(i-1)+1-5]) || 
+        if approxEq(state.anomaly, problem.debris[5*(i-1)+1]) || approxEq(state.anomaly, problem.debris[5*(i-1)+1-5]) ||
            approxEq(state.anomaly, problem.debris[5*(i-1)+1+5])
           atTime = true
         end
-      elseif i ==1 
+      elseif i ==1
         if approxEq(state.anomaly, problem.debris[5*(i-1)+1]) || approxEq(state.anomaly, problem.debris[5*(i-1)+1+5])
           atTime = true
         end
@@ -135,10 +135,10 @@ function debrisLocations(problem::CSLVProblem, state::State)
       if atTime == true
         ## if time remain matches the time of the debris falling +/- 20 seconds
         compareValue = problem.timeThres-floor(floor(problem.debris[i*5],-1)/problem.timeStepSeconds)
-        if approxEq(compareValue, state.timeRem) || approxEq(compareValue, (state.timeRem+1)) || 
-           approxEq(compareValue, (state.timeRem-1)) || approxEq(compareValue, (state.timeRem+2)) || 
+        if approxEq(compareValue, state.timeRem) || approxEq(compareValue, (state.timeRem+1)) ||
+           approxEq(compareValue, (state.timeRem-1)) || approxEq(compareValue, (state.timeRem+2)) ||
            approxEq(compareValue, (state.timeRem-2))
-          ## check to see if in debris range 
+          ## check to see if in debris range
           if inEllipse(problem, state, problem.debris[5*(i-1)+2], problem.debris[5*(i-1)+3]) > 0.
             returnValue = 1.
           end
@@ -199,8 +199,8 @@ function nextState(problem::CSLVProblem, state::State, action::Action)
   else
     ## turning probability distribution
     response = problem.turnDist
-    headings = [unwrap_deg(state.head-2*problem.stepHeadingState), unwrap_deg(state.head-problem.stepHeadingState), 
-                unwrap_deg(state.head), unwrap_deg(state.head+problem.stepHeadingState), 
+    headings = [unwrap_deg(state.head-2*problem.stepHeadingState), unwrap_deg(state.head-problem.stepHeadingState),
+                unwrap_deg(state.head), unwrap_deg(state.head+problem.stepHeadingState),
                 unwrap_deg(state.head+2*problem.stepHeadingState)]
   end
   ## setup the speeds and positions
@@ -217,9 +217,9 @@ function nextState(problem::CSLVProblem, state::State, action::Action)
       possibleNorth[i] = state.y
     end
   end
-  ## next states if anomaly already occurred 
+  ## next states if anomaly already occurred
   if state.anomaly >= 0.
-    ## only next states with anomaly 
+    ## only next states with anomaly
     nextStates = Array(Array, length(headings))
     for i=1:length(headings)
       nextStates[i] = [possibleEast[i], possibleNorth[i], headings[i], state.anomaly, state.timeRem-1.]
@@ -281,10 +281,10 @@ function valueIteration(problem::CSLVProblem)
       (probabilities, nextStates) = nextState(problem, state, action)
       ## cycle over all potential next states
       for nextStateIndex = 1:length(nextStates)
-        x = nextStates[nextStateIndex] 
+        x = nextStates[nextStateIndex]
         QNow = QNow + probabilities[nextStateIndex] * interpolate(problem.acGrid, util, x)
       end
-      ## set maximum utility value 
+      ## set maximum utility value
       if ai == 1 || QNow > QHi
         QHi = QNow
         util[i] = QHi
@@ -303,7 +303,7 @@ end
 function action(problem::CSLVProblem, util, x)
   ## want optimal, so start with min and find max
   QHi = 0.
-  ind = 1 
+  ind = 1
   ## cycle through actions
   for i in 1:problem.nActions
     ## find current utility value
@@ -312,7 +312,7 @@ function action(problem::CSLVProblem, util, x)
     (probabilities, nextStates) = nextState(problem, State(x), problem.actionArray[i])
     ## cycle over all potential next states
     for nextStateIndex in 1:length(nextStates)
-      xStar = nextStates[nextStateIndex] 
+      xStar = nextStates[nextStateIndex]
       QNow = QNow + probabilities[nextStateIndex] * interpolate(problem.acGrid, util, xStar)
     end
     ## set maximum utility value and record corresponding action
