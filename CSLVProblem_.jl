@@ -100,7 +100,7 @@ function CSLVProblem()
 
   probAnom = 0.052 # probability of anomaly for each time step
 
-  safeThres = 5*1520.4 # in meters (NOTE: added 5x multiplier for testing)
+  safeThres = 1520.4 # in meters (NOTE: added 5x multiplier for testing)
 
   ## MAKE lvStates
   prob = fill(0.052,length(eUse))

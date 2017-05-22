@@ -85,7 +85,7 @@ function inEllipse(problem::CSLVProblem, state::State, cX::Float64, cY::Float64)
   ## setup rotation matrix
   cPhi = cos(phi)
   sPhi = sin(phi)
-  rotMatrix = [cPhi sPhi;-sPhi cPhi]
+  #rotMatrix = [cPhi sPhi;-sPhi cPhi]
   ## find foci length
   a = 2. * sp1.safe
   b = sp1.safe
@@ -93,13 +93,17 @@ function inEllipse(problem::CSLVProblem, state::State, cX::Float64, cY::Float64)
   ## setup foci positions
   cXP = fociLength
   cXM = -fociLength
-  fociInit = [cXM 0.;cXP 0.]
-  fociRot = fociInit*rotMatrix
-  fociFinalX = fociRot[:,1] .+ cX
-  fociFinalY = fociRot[:,2] .+ cY
-  foci = [fociFinalX fociFinalY]
+  #fociInit = [cXM 0.;cXP 0.]
+  #fociRot = fociInit*rotMatrix
+  fx1 = cXM*cPhi + cX
+  fx2 = cXP*cPhi + cX
+  fy1 = cXM*sPhi + cY
+  fy2 = cXP*sPhi + cY
+  #fociFinalX = fociRot[:,1] .+ cX
+  #fociFinalY = fociRot[:,2] .+ cY
+  #foci = [fociFinalX fociFinalY]
   ## check if aircraft is within debris ellipse
-  if ((state.x-foci[1])^2+(state.y-foci[3])^2)^.5 + ((state.x-foci[2])^2+(state.y-foci[4])^2)^.5 <= (2.*a)
+  if sqrt((state.x-fx1)^2+(state.y-fy1)^2) + sqrt((state.x-fx2)^2+(state.y-fy2)^2) <= (2.*a)
     return 1.
   else
     return 0.
