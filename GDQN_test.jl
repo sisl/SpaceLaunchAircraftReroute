@@ -17,7 +17,7 @@ means = collect([x, y, h, -1, -0.81] for (x,y,h) in zip(x_means, y_means, h_mean
 Sigmas = collect(PDMat(full(Diagonal([1.4, 1.4, 0.4, 0.01, 0.01]))) for i in 1:N)
 
 s0_dist = rl.GMM(N,5,weights,means,Sigmas);
-dqn = rl.GDQN(max_steps=100, checkpoint_interval=25, num_epochs=800, target_refresh_interval=200)
+dqn = rl.GDQN(max_steps=100, checkpoint_interval=25, num_epochs=5000, target_refresh_interval=500)
 pol = rl.solve(dqn, mdp, s0_dist=Nullable{rl.GMM}(s0_dist))
 
 df = DataFrame(dqn.stats)
