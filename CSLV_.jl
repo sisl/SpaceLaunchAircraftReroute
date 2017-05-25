@@ -62,6 +62,11 @@ function velocityReward(problem::CSLVProblem, state::State, action::Action)
   elseif action.head != 0
     reward = -1.
   end
+
+  # stupid sanity check reward
+  if state.x > 0 && state.y > 0 && action.head > 25.
+    reward = 5.
+  end
   reward
 end
 
