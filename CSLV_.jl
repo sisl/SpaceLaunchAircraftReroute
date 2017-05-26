@@ -63,10 +63,6 @@ function velocityReward(problem::CSLVProblem, state::State, action::Action)
     reward = -1.
   end
 
-  # stupid sanity check reward
-  if state.x > 0 && state.y > 0 && action.head > 25.
-    reward = 5.
-  end
   reward
 end
 
@@ -180,12 +176,38 @@ function distanceReward(problem::CSLVProblem, state::State)
   reward
 end
 
+function sanityReward(problem::CSLVProblem, state::State, action::Action)
+  ## not within safety threshold of debris
+  reward = 0.
+  ## check if when launch vehicle passes through altitude
+  if state.timeRem == problem.intersectTime
+    distance = ((state.x - problem.lvStates[6].x)^2+(state.y - problem.lvStates[6].y)^2)^.5
+    ## check distance between launch vehicle and aircraft
+    if distance <= problem.lvStates[6].safe
+      if action.head > 25.0
+        reward = 1.
+      end
+      return reward
+    end
+  end
+  ## if anomaly, determine if aircraft is at risk from any debris
+  if state.anomaly >= 0.
+    if debrisLocations(problem, state) > 0.
+      if action.head > 25.0
+        reward = 1.
+      end
+    end
+  end
+  reward
+end
+
 ## set overall reward value
 function reward(problem::CSLVProblem, state::State, action::Action)
   if velocityReward(problem, state, action) == -Inf
     return -Inf
   else
-    return problem.lambda * velocityReward(problem, state, action) + distanceReward(problem, state)
+    #return problem.lambda * velocityReward(problem, state, action) + distanceReward(problem, state)
+    return problem.lambda * velocityReward(problem, state, action)  + sanityReward(problem, state, action)
   end
 end
 

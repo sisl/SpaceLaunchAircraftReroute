@@ -28,6 +28,6 @@ for (i,s) in enumerate(iterator(states(mdp)))
     util[i] = rl.util(pol, s)
 end
 
-f = open("lambda0.05_gdqn", "w")
+f = open("lambda0.05_gdqn_sanity2", "w")
 writedlm(f, util)
 close(f)
