@@ -50,15 +50,6 @@ function velocityReward(problem::CSLVProblem, state::State, action::Action)
   ## no alert
   if action.head == problem.noAlert
     reward = 0.
-  ## alert with heading change
-  # elseif state.head != action.head
-  #   ## check if heading change is possible
-  #   if abs(unwrap_deg(state.head-action.head)) > problem.headingLimit
-  #     reward = -Inf
-  #   else
-  #     reward = -1.
-  #   end
-  # end
   elseif action.head != 0
     reward = -1.
   end
@@ -206,8 +197,8 @@ function reward(problem::CSLVProblem, state::State, action::Action)
   if velocityReward(problem, state, action) == -Inf
     return -Inf
   else
-    #return problem.lambda * velocityReward(problem, state, action) + distanceReward(problem, state)
-    return problem.lambda * velocityReward(problem, state, action)  + sanityReward(problem, state, action)
+    return problem.lambda * velocityReward(problem, state, action) + distanceReward(problem, state)
+    #return problem.lambda * velocityReward(problem, state, action)  + sanityReward(problem, state, action)
   end
 end
 

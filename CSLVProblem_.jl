@@ -60,7 +60,7 @@ type CSLVProblem <: MDP{State,Action}
 end
 
 ## MAKE the problem
-function CSLVProblem()
+function CSLVProblem(;distRes = 2000.)
 
   #############################################################
   ##          Parameters needed for immutable State          ##
@@ -71,11 +71,11 @@ function CSLVProblem()
 
   minE = -2.5e4
   maxE = 5.1e4
-  stepE = 4000. #2000.
+  stepE = distRes
 
   minN = -4.5e4
   maxN = 6.5e4
-  stepN = 4000. #2000.
+  stepN = distRes
 
   stepHeadingState = 15. # degrees
 
@@ -100,7 +100,7 @@ function CSLVProblem()
 
   probAnom = 0.052 # probability of anomaly for each time step
 
-  safeThres = 1520.4 # in meters (NOTE: added 5x multiplier for testing)
+  safeThres = 5*1520.4 # in meters (NOTE: added 5x multiplier for testing)
 
   ## MAKE lvStates
   prob = fill(0.052,length(eUse))
